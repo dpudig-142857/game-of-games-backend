@@ -1,4 +1,3 @@
--- pg_dump -U postgres -d gog -f gog.sql
 --
 -- PostgreSQL database dump
 --
@@ -18,425 +17,23 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET default_tablespace = '';
-
-SET default_table_access_method = heap;
-
---
--- Name: games_info; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.games_info (
-    game_id integer NOT NULL,
-    name character varying(255),
-    tag character varying(255),
-    type character varying(255),
-    results_type character varying(255),
-    winner_criteria character varying(255),
-    header text,
-    player_min integer,
-    player_max integer,
-    starting character varying(255),
-    colour character varying(255)
-);
-
-
-ALTER TABLE public.games_info OWNER TO postgres;
-
---
--- Name: games_info_game_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.games_info_game_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.games_info_game_id_seq OWNER TO postgres;
-
---
--- Name: games_info_game_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.games_info_game_id_seq OWNED BY public.games_info.game_id;
-
-
---
--- Name: gog_final_results; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_final_results (
-    session_id integer NOT NULL,
-    player_id integer NOT NULL,
-    place integer,
-    points integer,
-    cones integer
-);
-
-
-ALTER TABLE public.gog_final_results OWNER TO postgres;
-
---
--- Name: gog_game_players; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_game_players (
-    game_instance_id integer NOT NULL,
-    player_id integer NOT NULL,
-    speciality boolean,
-    place integer,
-    reward text,
-    points text,
-    stars integer,
-    coins integer,
-    rounds text[]
-);
-
-
-ALTER TABLE public.gog_game_players OWNER TO postgres;
-
---
--- Name: gog_game_votes; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_game_votes (
-    vote_id integer NOT NULL,
-    game_instance_id integer NOT NULL,
-    player_id integer NOT NULL,
-    game_name character varying(255)
-);
-
-
-ALTER TABLE public.gog_game_votes OWNER TO postgres;
-
---
--- Name: gog_game_votes_vote_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.gog_game_votes_vote_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.gog_game_votes_vote_id_seq OWNER TO postgres;
-
---
--- Name: gog_game_votes_vote_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.gog_game_votes_vote_id_seq OWNED BY public.gog_game_votes.vote_id;
-
-
---
--- Name: gog_games; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_games (
-    game_instance_id integer NOT NULL,
-    session_id integer NOT NULL,
-    game_id integer NOT NULL,
-    game_number integer NOT NULL,
-    name character varying(255),
-    status character varying(50),
-    selected_by character varying(50),
-    extras text[],
-    after text[]
-);
-
-
-ALTER TABLE public.gog_games OWNER TO postgres;
-
---
--- Name: gog_games_game_instance_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.gog_games_game_instance_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.gog_games_game_instance_id_seq OWNER TO postgres;
-
---
--- Name: gog_games_game_instance_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.gog_games_game_instance_id_seq OWNED BY public.gog_games.game_instance_id;
-
-
---
--- Name: gog_games_neighed; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_games_neighed (
-    game_neighed_id integer NOT NULL,
-    session_id integer NOT NULL,
-    game_id integer NOT NULL,
-    player_id integer NOT NULL,
-    type character varying(20) NOT NULL
-);
-
-
-ALTER TABLE public.gog_games_neighed OWNER TO postgres;
-
---
--- Name: gog_games_neighed_game_neighed_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.gog_games_neighed_game_neighed_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.gog_games_neighed_game_neighed_id_seq OWNER TO postgres;
-
---
--- Name: gog_games_neighed_game_neighed_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.gog_games_neighed_game_neighed_id_seq OWNED BY public.gog_games_neighed.game_neighed_id;
-
-
---
--- Name: gog_players; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_players (
-    session_id integer NOT NULL,
-    player_id integer NOT NULL,
-    is_playing boolean,
-    speciality text[],
-    pg_cone integer,
-    f20g_cone integer,
-    l_cone integer,
-    c_cone integer,
-    w_cone integer,
-    v_cone integer,
-    g_point integer,
-    c_point integer,
-    special_w_point integer,
-    special_l_point integer,
-    neigh integer,
-    super_neigh integer,
-    gooc_total integer,
-    gooc_used integer
-);
-
-
-ALTER TABLE public.gog_players OWNER TO postgres;
-
---
--- Name: gog_possible_games; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_possible_games (
-    session_id integer,
-    game_id integer,
-    game_name character varying(255)
-);
-
-
-ALTER TABLE public.gog_possible_games OWNER TO postgres;
-
---
--- Name: gog_sessions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.gog_sessions (
-    session_id integer NOT NULL,
-    name character varying(255),
-    status character varying(50),
-    start_time timestamp with time zone,
-    finish_time timestamp with time zone,
-    points_system character varying(100),
-    speciality_count integer,
-    refresh_count integer,
-    intruded integer[],
-    abandoned integer[],
-    extra text[]
-);
-
-
-ALTER TABLE public.gog_sessions OWNER TO postgres;
-
---
--- Name: gog_sessions_session_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.gog_sessions_session_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.gog_sessions_session_id_seq OWNER TO postgres;
-
---
--- Name: gog_sessions_session_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.gog_sessions_session_id_seq OWNED BY public.gog_sessions.session_id;
-
-
---
--- Name: points_system; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.points_system (
-    points_system_id integer NOT NULL,
-    num_players integer,
-    rewards text[],
-    type character varying(255)
-);
-
-
-ALTER TABLE public.points_system OWNER TO postgres;
-
---
--- Name: points_system_points_system_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.points_system_points_system_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.points_system_points_system_id_seq OWNER TO postgres;
-
---
--- Name: points_system_points_system_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.points_system_points_system_id_seq OWNED BY public.points_system.points_system_id;
-
-
---
--- Name: user_sessions; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.user_sessions (
-    sid character varying NOT NULL,
-    sess json NOT NULL,
-    expire timestamp without time zone NOT NULL
-);
-
-
-ALTER TABLE public.user_sessions OWNER TO postgres;
-
---
--- Name: accounts; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.accounts (
-    player_id integer NOT NULL,
-    name text NOT NULL,
-    family text NOT NULL,
-    colour text NOT NULL,
-    username text NOT NULL,
-    password_hash text NOT NULL,
-    role text NOT NULL,
-    avatar_seed text,
-    created_at timestamp without time zone DEFAULT now(),
-    last_login timestamp without time zone DEFAULT now(),
-    birthday date NOT NULL,
-    version text NOT NULL
-);
-
-
-ALTER TABLE public.accounts OWNER TO postgres;
-
---
--- Name: accounts_player_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.accounts_player_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER SEQUENCE public.accounts_player_id_seq OWNER TO postgres;
-
---
--- Name: accounts_player_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.accounts_player_id_seq OWNED BY public.accounts.player_id;
-
-
---
--- Name: games_info game_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.games_info ALTER COLUMN game_id SET DEFAULT nextval('public.games_info_game_id_seq'::regclass);
-
-
---
--- Name: gog_game_votes vote_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_votes ALTER COLUMN vote_id SET DEFAULT nextval('public.gog_game_votes_vote_id_seq'::regclass);
-
-
---
--- Name: gog_games game_instance_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games ALTER COLUMN game_instance_id SET DEFAULT nextval('public.gog_games_game_instance_id_seq'::regclass);
-
-
---
--- Name: gog_games_neighed game_neighed_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games_neighed ALTER COLUMN game_neighed_id SET DEFAULT nextval('public.gog_games_neighed_game_neighed_id_seq'::regclass);
-
-
 --
--- Name: gog_sessions session_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_sessions ALTER COLUMN session_id SET DEFAULT nextval('public.gog_sessions_session_id_seq'::regclass);
-
-
---
--- Name: points_system points_system_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.points_system ALTER COLUMN points_system_id SET DEFAULT nextval('public.points_system_points_system_id_seq'::regclass);
-
-
---
--- Name: accounts player_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.accounts ALTER COLUMN player_id SET DEFAULT nextval('public.accounts_player_id_seq'::regclass);
+-- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.accounts (player_id, name, family, colour, username, password_hash, role, avatar_seed, created_at, last_login, birthday, version) FROM stdin;
+1	Dan	Pudig	#E63946	DanTheMan	$2b$12$2JwoUfWesbbXXGVGO19P7e8yNpo5vKxo4/MjBZjA2DkstduhfUNkq	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=ff0000&translateX=0&translateY=0&eyes=shades&mouth=cute	2025-12-19 16:20:31.487317	2025-12-23 16:20:31.487317	2001-10-23	private
+2	Gideon	Blinder	#105E2F	Gid980	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-05-05	private
+3	Jake	Burgess	#800000	Jqm	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-02-07	private
+4	Danny	Lawrence	#014273	Dannywuh	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-10-26	private
+5	Alex	O'Dowd	#992ADE	Ultraturkey	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-09-11	private
+6	Max	Tester	#00805E	Goodbyeyou	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2001-10-11	private
+7	Isabella	Kaye	#FFFF99	Bella	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-02-24	private
+8	Vanessa	Hodges	#9DC183	Ness	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-01-06	private
+9	Aryana	Afzali	#35063E	Ari	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-04-19	private
+10	Max	Valetine	#03C04A	Max	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	user	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-09-08	private
+11	Abbey	Walker	#87CEEB	Abbey	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2001-03-16	private
+\.
 
 
 --
@@ -511,6 +108,35 @@ COPY public.games_info (game_id, name, tag, type, results_type, winner_criteria,
 65	Moose Master	moose	card	knockout	last	Follow the rules or look like a fool!	2	10	wheel_first	#00ACC1
 66	Codenames Pictures	codenames_pic	card	team_points	winner	Crack the code, guess the words!	2	10	wheel_first	#FF8A65
 67	Codenames Duet	codenames_duet	card	team_points	winner	Crack the code, guess the words!	2	10	wheel_first	#FF8A65
+\.
+
+
+--
+-- Data for Name: gog_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.gog_sessions (session_id, name, status, start_time, finish_time, points_system, speciality_count, refresh_count, intruded, abandoned, extra) FROM stdin;
+1	Game of Games No. 1	complete	2023-01-28 01:00:00+11	2023-01-28 23:59:59+11	Just Points	2	0	{}	{}	{}
+2	Game of Games No. 2	complete	2023-02-24 17:20:00+11	2023-02-24 18:55:52+11	Just Points	1	0	{}	{}	{"All at the same time","Speciality decided by Spinner Wheel"}
+3	Game of Games No. 3	complete	2023-10-12 17:20:00+11	2023-10-12 23:59:59+11	Points & Cones	0	0	{4}	{}	{}
+4	Game of Games No. 4	complete	2023-10-15 01:00:00+11	2023-10-15 23:59:59+11	Points & Cones	0	0	{}	{}	{}
+5	Game of Games No. 5	complete	2024-01-15 01:00:00+11	2024-01-15 23:59:59+11	Points & Cones	0	0	{}	{}	{}
+6	Game of Games No. 6	complete	2024-05-25 00:00:00+10	2024-05-25 23:59:59+10	Points & Cones	2	0	{}	{}	{}
+7	Game of Games No. 7	complete	2024-09-06 16:20:00+10	2024-09-06 23:59:59+10	Points & Cones	2	0	{2}	{6,7}	{}
+8	Game of Games No. 8	complete	2024-09-08 16:20:00+10	2024-09-08 23:59:59+10	Points & Cones	0	0	{}	{7}	{}
+9	Game of Games No. 9	complete	2023-01-28 01:00:00+11	2023-01-28 23:59:59+11	Points & Cones	2	0	{}	{}	{}
+10	Game of Games No. 10	complete	2024-10-07 14:00:00+11	2024-10-07 18:00:00+11	Points & Cones	2	0	{}	{}	{}
+11	Game of Games No. 11	complete	2024-10-23 13:23:00+11	2024-10-23 23:59:59+11	Points & Cones	0	0	{}	{}	{}
+12	Game of Games No. 12	complete	2024-11-24 00:00:00+11	2024-11-24 23:59:59+11	Points & Cones	0	0	{}	{}	{}
+13	Game of Games No. 13	complete	2024-12-21 00:00:00+11	2024-12-21 23:59:00+11	Points & Cones	2	0	{2}	{7}	{}
+14	Game of Games No. 14	complete	2025-01-04 00:00:00+11	2025-01-04 23:59:59+11	Points & Cones	2	0	{}	{}	{}
+15	Game of Games No. 15	complete	2025-01-26 18:00:00+11	2025-01-26 23:59:59+11	Points & Cones	2	0	{2}	{6,7}	{}
+16	Game of Games No. 16	complete	2025-03-09 16:20:00+11	2025-03-09 23:00:00+11	Points & Cones	2	0	{2}	{}	{}
+17	Game of Games No. 17	complete	2025-07-05 14:22:00+10	2025-07-05 23:11:00+10	Points & Cones	2	0	{9,10}	{6,7}	{}
+18	Game of Games No. 18	complete	2025-08-08 19:42:12.39+10	2025-08-09 00:34:33.653+10	Points & Cones	2	0	{}	{7}	{}
+19	Game of Games No. 19	complete	2025-08-30 13:05:49.407+10	2025-08-31 00:02:38.061+10	Points & Cones	2	0	{7}	{7}	{}
+20	Game of Games No. 20	complete	2025-09-19 19:30:00+10	2025-09-19 23:59:59+10	Points & Cones	1	0	{}	{}	{}
+21	Game of Games No. 21	complete	2025-09-27 14:10:00+10	2025-09-27 23:37:37.726+10	Points & Cones	2	1	{7,6,3}	{}	{}
 \.
 
 
@@ -627,6 +253,177 @@ COPY public.gog_final_results (session_id, player_id, place, points, cones) FROM
 21	7	4	7	8
 21	6	5	6	5
 21	5	6	4	9
+\.
+
+
+--
+-- Data for Name: gog_games; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.gog_games (game_instance_id, session_id, game_id, game_number, name, status, selected_by, extras, after) FROM stdin;
+1	1	19	1	Avocado Smash	complete	Wheel	{}	{}
+2	1	13	2	Uno	complete	Wheel	{}	{}
+3	1	4	3	Monopoly Deal	complete	Wheel	{}	{}
+4	1	1	4	Shithead	complete	Wheel	{}	{}
+5	1	14	5	Uno Flip	complete	Wheel	{}	{}
+6	1	3	6	Skip Bo	complete	Wheel	{}	{}
+7	1	27	7	Mario Kart	complete	Wheel	{"Time Trial","Koopa City"}	{}
+8	1	10	8	Yahtzee Cards	complete	Wheel	{}	{}
+9	1	2	9	Golf	complete	Wheel	{}	{}
+10	1	29	10	Super Smash Bros	complete	Wheel	{"3 rounds"}	{}
+11	1	9	11	Llamas Unleashed	complete	Wheel	{}	{}
+12	1	7	12	Here to Slay	complete	Wheel	{}	{}
+13	2	3	1	Skip Bo	complete	Choose	{}	{}
+14	2	1	2	Shithead	complete	Choose	{}	{}
+15	2	34	3	Minigolf Adventure	complete	Choose	{}	{}
+16	2	52	4	Jenga	complete	Choose	{}	{}
+17	3	52	1	Jenga	complete	Wheel	{}	{"Isabella NEIGHED Yahtzee Cards","Jake NEIGHED Alphabetix"}
+18	3	53	2	4:20 Game	complete	Wheel	{session_3.png}	{}
+19	3	3	3	Skip Bo	complete	Wheel	{}	{"Danny INTRUDED the Game"}
+20	3	13	4	Uno	complete	Wheel	{}	{}
+21	3	1	5	Shithead	complete	Wheel	{}	{"Alex had a VICTORY cone","Dan NEIGHED Alphabetix"}
+22	3	28	6	Mario Party	complete	Wheel	{Teams}	{"Jake had a BREAK cone","Gideon had a VICTORY cone","Danny had a VICTORY cone"}
+23	4	31	1	Switch Tennis	complete	Wheel	{}	{"Alex NEIGHED Alphabetix"}
+24	4	22	2	Catan	complete	Wheel	{}	{"Everyone had a BREAK cone"}
+25	4	2	3	Golf	complete	Wheel	{}	{"Dan had a VICTORY cone","Jake had a VICTORY cone"}
+26	5	22	1	Catan	complete	Wheel	{}	{"Alex had a BREAK cone"}
+27	5	30	2	Switch Bowling	complete	Wheel	{}	{"Gideon had a BREAK cone","Alex NEIGHED Mario Kart"}
+28	5	51	3	Uno Stacko	complete	Wheel	{}	{}
+29	5	14	4	Uno Flip	complete	Wheel	{}	{"Dan had a VICTORY cone"}
+30	5	1	5	Shithead	complete	Wheel	{}	{"Alex had a WHEEL cone"}
+31	5	3	6	Skip Bo	complete	Wheel	{}	{}
+32	5	6	7	Muffin Time	complete	Wheel	{}	{}
+33	5	2	8	Golf	complete	Wheel	{}	{"Jake had a BREAK cone","Alex had a VICTORY cone"}
+34	6	35	1	Gang Beasts	complete	Wheel	{}	{}
+35	6	34	2	Minigolf Adventure	complete	Wheel	{}	{}
+36	6	29	3	Super Smash Bros	complete	Wheel	{}	{"Jake had a BREAK cone"}
+37	6	28	4	Mario Party	complete	Wheel	{}	{"Gideon NEIGHED Switch Golf","Dan NEIGHED Gideon's Neigh"}
+38	6	33	5	Switch Golf	complete	Wheel	{}	{}
+39	6	2	6	Golf	complete	Wheel	{}	{}
+40	6	14	7	Uno Flip	complete	Wheel	{}	{}
+41	6	25	8	Trouble (Pop-n-hop)	complete	Wheel	{}	{"Dan had a VICTORY cone"}
+42	7	52	1	Jenga	complete	Wheel	{}	{"Isabella had a BREAK cone","Gideon INTRUDED the Game","Everyone had a BREAK cone"}
+43	7	21	2	Game of Life	complete	Wheel	{}	{"Dan had a BREAK cone","Alex had a BREAK cone","Danny had a BREAK cone","Max had a BREAK cone"}
+44	7	30	3	Switch Bowling	complete	Wheel	{Standard}	{"Dan had a VICTORY cone","Gideon had a BREAK cone","Isabella had a BREAK cone"}
+45	7	53	4	4:20 Game	complete	Wheel	{session_7.png}	{"Isabella NEIGHED Catan"}
+46	7	2	5	Golf	complete	Wheel	{"3 Rounds"}	{"Max ABANDONED the Game","Isabella ABANDONED the Game"}
+47	7	1	6	Shithead	complete	Wheel	{}	{"Danny had a VICTORY cone"}
+48	8	42	1	Table Tennis	complete	Wheel	{}	{"Isabella NEIGHED Gang Beasts","Dan NEIGHED Mario Party"}
+49	8	34	2	Minigolf Adventure	complete	Wheel	{"3 Rounds"}	{"Dan had a VICTORY cone"}
+50	8	2	3	Golf	complete	Wheel	{"4 Rounds"}	{}
+51	8	30	4	Switch Bowling	complete	Wheel	{Special}	{"Max won a GOOC card - Got a Five Bagger","Jake NEIGHED Switch Golf","Isabella SUPER NEIGHED Switch Basketball","Max NEIGHED Super Smash Bros","Max SUPER NEIGHED Gang Beasts","Jake SUPER NEIGHED Super Smash Bros","Dan SUPER NEIGHED Gang Beasts","Isabella ABANDONED the Game"}
+52	8	1	5	Shithead	complete	Wheel	{"2 Decks"}	{}
+53	9	8	1	Unstable Unicorns	complete	Wheel	{}	{}
+54	9	14	2	Uno Flip	complete	Wheel	{}	{}
+55	9	27	3	Mario Kart	complete	Wheel	{"4 Races"}	{}
+56	9	53	4	4:20 Game	complete	Wheel	{session_9.png}	{}
+57	9	28	5	Mario Party	complete	Wheel	{Superstars,"Woody Woods","15 Turns"}	{"Dan had a BREAK cone (4:20)","Jake had a BREAK cone (4:20)","Jake NEIGHED Super Smash Bros"}
+58	9	35	6	Gang Beasts	complete	Wheel	{"First to 3"}	{}
+59	9	31	7	Switch Tennis	complete	Wheel	{"Best of 5"}	{"Dan had a VICTORY cone"}
+60	9	34	8	Minigolf Adventure	complete	Wheel	{"6 Holes"}	{}
+61	9	1	9	Shithead	complete	Wheel	{"2 Decks"}	{}
+62	9	17	10	Costumed Cats	complete	Wheel	{"First to 13"}	{"Jake NEIGHED Injustice","Dan NEIGHED Monopoly","Jake SUPER NEIGHED Monopoly"}
+63	9	2	11	Golf	complete	Wheel	{"7 Rounds"}	{"Dan had a VICTORY cone","DINNER BREAK","Dan had a BREAK cone","Jake had a BREAK cone","Dan NEIGHED Monopoly Deal"}
+64	9	33	12	Switch Golf	complete	Wheel	{}	{}
+65	9	6	13	Muffin Time	complete	Wheel	{}	{"Dan had a VICTORY cone","Dan SUPER NEIGHED Yahtzee Cards","Dan SUPER NEIGHED Monopoly Deal","Jake SUPER NEIGHED Call of Duty"}
+66	9	30	14	Switch Bowling	complete	Wheel	{Special,Advanced}	{}
+67	9	52	15	Jenga	complete	Wheel	{}	{"Dan had a VICTORY cone"}
+68	9	3	16	Skip Bo	complete	Wheel	{"13 Cards","2 Up 2 Down"}	{"Jake had a VICTORY cone"}
+69	10	42	1	Table Tennis	complete	Wheel	{}	{"Jake won a GOOC card - Flawless Victory","Isabella won a GOOC card - Flawless Victory","Everyone had a BREAK cone (4:20 cone)"}
+70	10	2	2	Golf	complete	Wheel	{"5 rounds"}	{"Isabella used her GOOC card","Max had a VICTORY cone","Dan had a BREAK cone","Alex had a BREAK cone"}
+71	10	41	3	Basketball	complete	Wheel	{}	{"Dan got injured :(","Dan had a VICTORY cone (best pain relief)"}
+72	11	28	1	Mario Party	complete	Choose	{Jamboree,"10 Turns","Goomba Lagoon"}	{"Dan had a BREAK cone","Max had a BREAK cone","Isabella had a VICTORY cone","LUNCH BREAK","Dan had a BREAK cone (4:20 cone)","Isabella had a BREAK cone (4:20 cone)"}
+73	11	2	2	Golf	complete	Choose	{"4 rounds"}	{}
+74	11	3	3	Skip Bo	complete	Choose	{"12 Cards","2 Up 2 Down"}	{}
+75	11	53	4	4:20 Game	complete	Choose	{session_11.png}	{}
+76	11	30	5	Switch Bowling	complete	Choose	{Standard}	{"Dan had a VICTORY cone"}
+77	12	25	1	Trouble (Pop-n-hop)	complete	Choose	{}	{"Vanessa had a VICTORY cone"}
+78	12	27	2	Mario Kart	complete	Choose	{}	{"Dan had a VICTORY cone"}
+79	12	1	3	Shithead	complete	Choose	{}	{}
+80	12	31	4	Switch Tennis	complete	Choose	{}	{}
+81	12	2	5	Golf	complete	Choose	{"3 Rounds"}	{"Dan had a VICTORY cone"}
+82	13	51	1	Uno Stacko	complete	Vote	{}	{}
+83	13	8	2	Unstable Unicorns	complete	Vote	{}	{"Gideon INTRUDED the Game","Isabella ABANDONED the Game"}
+84	13	29	3	Super Smash Bros	complete	Vote	{Knockout}	{}
+85	13	53	4	4:20 Game	complete	Vote	{session_13.png}	{}
+86	13	47	5	Quoits	complete	Vote	{"3 Rounds"}	{}
+87	13	49	6	Shooting	complete	Vote	{"2 Rounds"}	{}
+88	14	51	1	Uno Stacko	complete	Vote	{}	{}
+89	14	1	2	Shithead	complete	Vote	{}	{}
+90	14	2	3	Golf	complete	Vote	{}	{}
+91	14	27	4	Mario Kart	complete	Vote	{}	{}
+92	14	49	5	Shooting	complete	Vote	{"3 Rounds"}	{}
+93	14	28	6	Mario Party	complete	Vote	{}	{"DINNER BREAK","Dan had a VICTORY cone","Jake had a BREAK cone"}
+94	14	34	7	Minigolf Adventure	complete	Vote	{"6 Holes"}	{}
+95	14	22	8	Catan	complete	Vote	{}	{"Danny had a WHEEL cone"}
+96	14	47	9	Quoits	complete	Vote	{"3 Rounds"}	{}
+97	14	30	10	Switch Bowling	complete	Vote	{Special,Advanced}	{}
+98	15	52	1	Jenga	complete	Vote	{}	{"Gideon INTRUDED the Game"}
+99	15	34	2	Minigolf Adventure	complete	Vote	{}	{}
+100	15	1	3	Shithead	complete	Vote	{}	{"DINNER BREAK","Everyone had a BREAK cone (joint time!)"}
+101	15	13	4	Uno	complete	Vote	{}	{"Max ABANDONED the Game","Isabella ABANDONED the Game"}
+102	15	29	5	Super Smash Bros	complete	Vote	{}	{}
+103	16	34	1	Minigolf Adventure	complete	Vote	{"3 Races"}	{}
+104	16	28	2	Mario Party	complete	Vote	{Jamboree,"10 Turns","Roll 'em Raceway"}	{}
+105	16	27	3	Mario Kart	complete	Vote	{"6 Races"}	{"Gideon INTRUDED the Game"}
+106	16	3	4	Skip Bo	complete	Vote	{}	{"Dan had a VICTORY cone","DINNER BREAK","Alex had a WHEEL cone"}
+107	16	55	5	Five Crowns	complete	Vote	{"7 Rounds","Spinner Wheel"}	{}
+108	16	52	6	Jenga	complete	Vote	{}	{}
+109	17	51	1	Uno Stacko	complete	Vote	{}	{"Gideon had a BREAK cone","Max V INTRUDED the Game"}
+110	17	53	2	4:20 Game	complete	Vote	{session_17.png}	{}
+111	17	60	3	Putt Putt	complete	Vote	{}	{"Isabella ABANDONED the Game"}
+112	17	29	4	Super Smash Bros	complete	Vote	{Knockout}	{"Aryana INTRUDED the Game"}
+113	17	61	5	Codenames	complete	Vote	{}	{"Dan had a VICTORY cone","DINNER BREAK","Isabella INTRUDED the Game"}
+114	17	52	6	Jenga	complete	Vote	{}	{}
+115	17	34	7	Minigolf Adventure	complete	Vote	{"2 Rounds","3 Races"}	{}
+116	17	59	8	Beer Pong	complete	Vote	{}	{"Max T ABANDONED the Game","Isabella ABANDONED the Game"}
+117	17	55	9	Five Crowns	complete	Vote	{}	{}
+118	18	62	1	Boomerang Fu	complete	Vote	{}	{"Dan had a VICTORY cone"}
+119	18	58	2	Flip 7	complete	Vote	{}	{}
+120	18	47	3	Quoits	complete	Vote	{"3 rounds"}	{"Isabella had a WHEEL cone"}
+121	18	51	4	Uno Stacko	complete	Vote	{}	{}
+122	18	14	5	Uno Flip	complete	Vote	{}	{}
+123	18	3	6	Skip Bo	complete	Vote	{"12 cards"}	{"Jake had a VICTORY cone"}
+124	18	34	7	Minigolf Adventure	complete	Vote	{}	{}
+125	18	61	8	Codenames	complete	Choose	{}	{"Danny had a VICTORY cone","Isabella ABANDONED the Game"}
+126	18	60	9	Putt Putt	complete	Vote	{}	{}
+127	18	53	10	4:20 Game	complete	Choose	{session_18.png}	{}
+128	19	25	1	Trouble (Pop-n-hop)	complete	Vote	{}	{}
+129	19	34	2	Minigolf Adventure	complete	Vote	{}	{}
+130	19	62	3	Boomerang Fu	complete	Vote	{}	{}
+131	19	47	4	Quoits	complete	Vote	{"3 rounds"}	{"Isabella INTRUDED the Game"}
+132	19	50	5	Alphabetix	complete	Vote	{"Topics: Animals, Countries, Food, Leisure Activities, Movie Characters, Song titles, Sportspersons and TV Shows"}	{}
+133	19	53	6	4:20 Game	complete	Choose	{session_19.png}	{}
+134	19	58	7	Flip 7	complete	Vote	{}	{}
+135	19	13	8	Uno	complete	Vote	{}	{}
+136	19	65	9	Moose Master	complete	Vote	{}	{"Isabella ABANDONED the Game"}
+137	19	64	10	Rhythm Kitchen	complete	Choose	{}	{}
+138	19	30	11	Switch Bowling	complete	Vote	{}	{}
+139	19	61	12	Codenames	complete	Vote	{}	{}
+140	19	59	13	Beer Pong	complete	Vote	{}	{}
+141	19	33	14	Switch Golf	complete	Vote	{}	{"Isabella INTRUDED the Game"}
+142	19	51	15	Uno Stacko	complete	Vote	{}	{}
+143	19	52	16	Jenga	complete	Vote	{"Normal Game"}	{}
+144	19	2	17	Golf	complete	Vote	{"5 rounds"}	{}
+145	19	14	18	Uno Flip	complete	Vote	{}	{}
+146	20	58	1	Flip 7	complete	Vote	{}	{"Dan had a BREAK cone","Isabella had a BREAK cone"}
+147	20	47	2	Quoits	complete	Vote	{"3 rounds"}	{"Max had a VICTORY cone"}
+148	20	65	3	Moose Master	complete	Vote	{}	{"Dan had a WHEEL cone"}
+149	20	34	4	Minigolf Adventure	complete	Vote	{}	{}
+150	20	51	5	Uno Stacko	complete	Choose	{}	{}
+151	20	53	6	4:20 Game	complete	Choose	{}	{session_20.png}
+152	21	58	1	Flip 7	complete	Choose	{}	{"Isabella INTRUDED the Game","Max INTRUDED the Game","Dan had a VICTORY cone"}
+153	21	6	2	Muffin Time	complete	Vote	{}	{}
+154	21	52	3	Jenga	complete	Vote	{"Normal Game"}	{}
+155	21	4	4	Monopoly Deal	complete	Vote	{}	{}
+156	21	22	5	Catan	complete	Vote	{}	{"DINNER BREAK","Dan had a BREAK cone","Jake INTRUDED the Game","Refreshed games"}
+157	21	47	6	Quoits	complete	Vote	{"3 rounds"}	{}
+158	21	52	7	Jenga	complete	Vote	{"Normal Game"}	{}
+159	21	61	8	Codenames	complete	Vote	{}	{}
+160	21	58	9	Flip 7	complete	Vote	{}	{"Alex had a WHEEL cone","Max had a WHEEL cone"}
+161	21	55	10	Five Crowns	complete	Vote	{"Type: Spinner Wheel"}	{}
+162	21	53	11	4:20 Game	complete	Choose	{session_21.png}	{}
+163	21	6	12	Muffin Time	complete	Choose	{}	{"Dan had a VICTORY cone"}
 \.
 
 
@@ -1801,177 +1598,6 @@ COPY public.gog_game_votes (vote_id, game_instance_id, player_id, game_name) FRO
 
 
 --
--- Data for Name: gog_games; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.gog_games (game_instance_id, session_id, game_id, game_number, name, status, selected_by, extras, after) FROM stdin;
-1	1	19	1	Avocado Smash	complete	Wheel	{}	{}
-2	1	13	2	Uno	complete	Wheel	{}	{}
-3	1	4	3	Monopoly Deal	complete	Wheel	{}	{}
-4	1	1	4	Shithead	complete	Wheel	{}	{}
-5	1	14	5	Uno Flip	complete	Wheel	{}	{}
-6	1	3	6	Skip Bo	complete	Wheel	{}	{}
-7	1	27	7	Mario Kart	complete	Wheel	{"Time Trial","Koopa City"}	{}
-8	1	10	8	Yahtzee Cards	complete	Wheel	{}	{}
-9	1	2	9	Golf	complete	Wheel	{}	{}
-10	1	29	10	Super Smash Bros	complete	Wheel	{"3 rounds"}	{}
-11	1	9	11	Llamas Unleashed	complete	Wheel	{}	{}
-12	1	7	12	Here to Slay	complete	Wheel	{}	{}
-13	2	3	1	Skip Bo	complete	Choose	{}	{}
-14	2	1	2	Shithead	complete	Choose	{}	{}
-15	2	34	3	Minigolf Adventure	complete	Choose	{}	{}
-16	2	52	4	Jenga	complete	Choose	{}	{}
-17	3	52	1	Jenga	complete	Wheel	{}	{"Isabella NEIGHED Yahtzee Cards","Jake NEIGHED Alphabetix"}
-18	3	53	2	4:20 Game	complete	Wheel	{session_3.png}	{}
-19	3	3	3	Skip Bo	complete	Wheel	{}	{"Danny INTRUDED the Game"}
-20	3	13	4	Uno	complete	Wheel	{}	{}
-21	3	1	5	Shithead	complete	Wheel	{}	{"Alex had a VICTORY cone","Dan NEIGHED Alphabetix"}
-22	3	28	6	Mario Party	complete	Wheel	{Teams}	{"Jake had a BREAK cone","Gideon had a VICTORY cone","Danny had a VICTORY cone"}
-23	4	31	1	Switch Tennis	complete	Wheel	{}	{"Alex NEIGHED Alphabetix"}
-24	4	22	2	Catan	complete	Wheel	{}	{"Everyone had a BREAK cone"}
-25	4	2	3	Golf	complete	Wheel	{}	{"Dan had a VICTORY cone","Jake had a VICTORY cone"}
-26	5	22	1	Catan	complete	Wheel	{}	{"Alex had a BREAK cone"}
-27	5	30	2	Switch Bowling	complete	Wheel	{}	{"Gideon had a BREAK cone","Alex NEIGHED Mario Kart"}
-28	5	51	3	Uno Stacko	complete	Wheel	{}	{}
-29	5	14	4	Uno Flip	complete	Wheel	{}	{"Dan had a VICTORY cone"}
-30	5	1	5	Shithead	complete	Wheel	{}	{"Alex had a WHEEL cone"}
-31	5	3	6	Skip Bo	complete	Wheel	{}	{}
-32	5	6	7	Muffin Time	complete	Wheel	{}	{}
-33	5	2	8	Golf	complete	Wheel	{}	{"Jake had a BREAK cone","Alex had a VICTORY cone"}
-34	6	35	1	Gang Beasts	complete	Wheel	{}	{}
-35	6	34	2	Minigolf Adventure	complete	Wheel	{}	{}
-36	6	29	3	Super Smash Bros	complete	Wheel	{}	{"Jake had a BREAK cone"}
-37	6	28	4	Mario Party	complete	Wheel	{}	{"Gideon NEIGHED Switch Golf","Dan NEIGHED Gideon's Neigh"}
-38	6	33	5	Switch Golf	complete	Wheel	{}	{}
-39	6	2	6	Golf	complete	Wheel	{}	{}
-40	6	14	7	Uno Flip	complete	Wheel	{}	{}
-41	6	25	8	Trouble (Pop-n-hop)	complete	Wheel	{}	{"Dan had a VICTORY cone"}
-42	7	52	1	Jenga	complete	Wheel	{}	{"Isabella had a BREAK cone","Gideon INTRUDED the Game","Everyone had a BREAK cone"}
-43	7	21	2	Game of Life	complete	Wheel	{}	{"Dan had a BREAK cone","Alex had a BREAK cone","Danny had a BREAK cone","Max had a BREAK cone"}
-44	7	30	3	Switch Bowling	complete	Wheel	{Standard}	{"Dan had a VICTORY cone","Gideon had a BREAK cone","Isabella had a BREAK cone"}
-45	7	53	4	4:20 Game	complete	Wheel	{session_7.png}	{"Isabella NEIGHED Catan"}
-46	7	2	5	Golf	complete	Wheel	{"3 Rounds"}	{"Max ABANDONED the Game","Isabella ABANDONED the Game"}
-47	7	1	6	Shithead	complete	Wheel	{}	{"Danny had a VICTORY cone"}
-48	8	42	1	Table Tennis	complete	Wheel	{}	{"Isabella NEIGHED Gang Beasts","Dan NEIGHED Mario Party"}
-49	8	34	2	Minigolf Adventure	complete	Wheel	{"3 Rounds"}	{"Dan had a VICTORY cone"}
-50	8	2	3	Golf	complete	Wheel	{"4 Rounds"}	{}
-51	8	30	4	Switch Bowling	complete	Wheel	{Special}	{"Max won a GOOC card - Got a Five Bagger","Jake NEIGHED Switch Golf","Isabella SUPER NEIGHED Switch Basketball","Max NEIGHED Super Smash Bros","Max SUPER NEIGHED Gang Beasts","Jake SUPER NEIGHED Super Smash Bros","Dan SUPER NEIGHED Gang Beasts","Isabella ABANDONED the Game"}
-52	8	1	5	Shithead	complete	Wheel	{"2 Decks"}	{}
-53	9	8	1	Unstable Unicorns	complete	Wheel	{}	{}
-54	9	14	2	Uno Flip	complete	Wheel	{}	{}
-55	9	27	3	Mario Kart	complete	Wheel	{"4 Races"}	{}
-56	9	53	4	4:20 Game	complete	Wheel	{session_9.png}	{}
-57	9	28	5	Mario Party	complete	Wheel	{Superstars,"Woody Woods","15 Turns"}	{"Dan had a BREAK cone (4:20)","Jake had a BREAK cone (4:20)","Jake NEIGHED Super Smash Bros"}
-58	9	35	6	Gang Beasts	complete	Wheel	{"First to 3"}	{}
-59	9	31	7	Switch Tennis	complete	Wheel	{"Best of 5"}	{"Dan had a VICTORY cone"}
-60	9	34	8	Minigolf Adventure	complete	Wheel	{"6 Holes"}	{}
-61	9	1	9	Shithead	complete	Wheel	{"2 Decks"}	{}
-62	9	17	10	Costumed Cats	complete	Wheel	{"First to 13"}	{"Jake NEIGHED Injustice","Dan NEIGHED Monopoly","Jake SUPER NEIGHED Monopoly"}
-63	9	2	11	Golf	complete	Wheel	{"7 Rounds"}	{"Dan had a VICTORY cone","DINNER BREAK","Dan had a BREAK cone","Jake had a BREAK cone","Dan NEIGHED Monopoly Deal"}
-64	9	33	12	Switch Golf	complete	Wheel	{}	{}
-65	9	6	13	Muffin Time	complete	Wheel	{}	{"Dan had a VICTORY cone","Dan SUPER NEIGHED Yahtzee Cards","Dan SUPER NEIGHED Monopoly Deal","Jake SUPER NEIGHED Call of Duty"}
-66	9	30	14	Switch Bowling	complete	Wheel	{Special,Advanced}	{}
-67	9	52	15	Jenga	complete	Wheel	{}	{"Dan had a VICTORY cone"}
-68	9	3	16	Skip Bo	complete	Wheel	{"13 Cards","2 Up 2 Down"}	{"Jake had a VICTORY cone"}
-69	10	42	1	Table Tennis	complete	Wheel	{}	{"Jake won a GOOC card - Flawless Victory","Isabella won a GOOC card - Flawless Victory","Everyone had a BREAK cone (4:20 cone)"}
-70	10	2	2	Golf	complete	Wheel	{"5 rounds"}	{"Isabella used her GOOC card","Max had a VICTORY cone","Dan had a BREAK cone","Alex had a BREAK cone"}
-71	10	41	3	Basketball	complete	Wheel	{}	{"Dan got injured :(","Dan had a VICTORY cone (best pain relief)"}
-72	11	28	1	Mario Party	complete	Choose	{Jamboree,"10 Turns","Goomba Lagoon"}	{"Dan had a BREAK cone","Max had a BREAK cone","Isabella had a VICTORY cone","LUNCH BREAK","Dan had a BREAK cone (4:20 cone)","Isabella had a BREAK cone (4:20 cone)"}
-73	11	2	2	Golf	complete	Choose	{"4 rounds"}	{}
-74	11	3	3	Skip Bo	complete	Choose	{"12 Cards","2 Up 2 Down"}	{}
-75	11	53	4	4:20 Game	complete	Choose	{session_11.png}	{}
-76	11	30	5	Switch Bowling	complete	Choose	{Standard}	{"Dan had a VICTORY cone"}
-77	12	25	1	Trouble (Pop-n-hop)	complete	Choose	{}	{"Vanessa had a VICTORY cone"}
-78	12	27	2	Mario Kart	complete	Choose	{}	{"Dan had a VICTORY cone"}
-79	12	1	3	Shithead	complete	Choose	{}	{}
-80	12	31	4	Switch Tennis	complete	Choose	{}	{}
-81	12	2	5	Golf	complete	Choose	{"3 Rounds"}	{"Dan had a VICTORY cone"}
-82	13	51	1	Uno Stacko	complete	Vote	{}	{}
-83	13	8	2	Unstable Unicorns	complete	Vote	{}	{"Gideon INTRUDED the Game","Isabella ABANDONED the Game"}
-84	13	29	3	Super Smash Bros	complete	Vote	{Knockout}	{}
-85	13	53	4	4:20 Game	complete	Vote	{session_13.png}	{}
-86	13	47	5	Quoits	complete	Vote	{"3 Rounds"}	{}
-87	13	49	6	Shooting	complete	Vote	{"2 Rounds"}	{}
-88	14	51	1	Uno Stacko	complete	Vote	{}	{}
-89	14	1	2	Shithead	complete	Vote	{}	{}
-90	14	2	3	Golf	complete	Vote	{}	{}
-91	14	27	4	Mario Kart	complete	Vote	{}	{}
-92	14	49	5	Shooting	complete	Vote	{"3 Rounds"}	{}
-93	14	28	6	Mario Party	complete	Vote	{}	{"DINNER BREAK","Dan had a VICTORY cone","Jake had a BREAK cone"}
-94	14	34	7	Minigolf Adventure	complete	Vote	{"6 Holes"}	{}
-95	14	22	8	Catan	complete	Vote	{}	{"Danny had a WHEEL cone"}
-96	14	47	9	Quoits	complete	Vote	{"3 Rounds"}	{}
-97	14	30	10	Switch Bowling	complete	Vote	{Special,Advanced}	{}
-98	15	52	1	Jenga	complete	Vote	{}	{"Gideon INTRUDED the Game"}
-99	15	34	2	Minigolf Adventure	complete	Vote	{}	{}
-100	15	1	3	Shithead	complete	Vote	{}	{"DINNER BREAK","Everyone had a BREAK cone (joint time!)"}
-101	15	13	4	Uno	complete	Vote	{}	{"Max ABANDONED the Game","Isabella ABANDONED the Game"}
-102	15	29	5	Super Smash Bros	complete	Vote	{}	{}
-103	16	34	1	Minigolf Adventure	complete	Vote	{"3 Races"}	{}
-104	16	28	2	Mario Party	complete	Vote	{Jamboree,"10 Turns","Roll 'em Raceway"}	{}
-105	16	27	3	Mario Kart	complete	Vote	{"6 Races"}	{"Gideon INTRUDED the Game"}
-106	16	3	4	Skip Bo	complete	Vote	{}	{"Dan had a VICTORY cone","DINNER BREAK","Alex had a WHEEL cone"}
-107	16	55	5	Five Crowns	complete	Vote	{"7 Rounds","Spinner Wheel"}	{}
-108	16	52	6	Jenga	complete	Vote	{}	{}
-109	17	51	1	Uno Stacko	complete	Vote	{}	{"Gideon had a BREAK cone","Max V INTRUDED the Game"}
-110	17	53	2	4:20 Game	complete	Vote	{session_17.png}	{}
-111	17	60	3	Putt Putt	complete	Vote	{}	{"Isabella ABANDONED the Game"}
-112	17	29	4	Super Smash Bros	complete	Vote	{Knockout}	{"Aryana INTRUDED the Game"}
-113	17	61	5	Codenames	complete	Vote	{}	{"Dan had a VICTORY cone","DINNER BREAK","Isabella INTRUDED the Game"}
-114	17	52	6	Jenga	complete	Vote	{}	{}
-115	17	34	7	Minigolf Adventure	complete	Vote	{"2 Rounds","3 Races"}	{}
-116	17	59	8	Beer Pong	complete	Vote	{}	{"Max T ABANDONED the Game","Isabella ABANDONED the Game"}
-117	17	55	9	Five Crowns	complete	Vote	{}	{}
-118	18	62	1	Boomerang Fu	complete	Vote	{}	{"Dan had a VICTORY cone"}
-119	18	58	2	Flip 7	complete	Vote	{}	{}
-120	18	47	3	Quoits	complete	Vote	{"3 rounds"}	{"Isabella had a WHEEL cone"}
-121	18	51	4	Uno Stacko	complete	Vote	{}	{}
-122	18	14	5	Uno Flip	complete	Vote	{}	{}
-123	18	3	6	Skip Bo	complete	Vote	{"12 cards"}	{"Jake had a VICTORY cone"}
-124	18	34	7	Minigolf Adventure	complete	Vote	{}	{}
-125	18	61	8	Codenames	complete	Choose	{}	{"Danny had a VICTORY cone","Isabella ABANDONED the Game"}
-126	18	60	9	Putt Putt	complete	Vote	{}	{}
-127	18	53	10	4:20 Game	complete	Choose	{session_18.png}	{}
-128	19	25	1	Trouble (Pop-n-hop)	complete	Vote	{}	{}
-129	19	34	2	Minigolf Adventure	complete	Vote	{}	{}
-130	19	62	3	Boomerang Fu	complete	Vote	{}	{}
-131	19	47	4	Quoits	complete	Vote	{"3 rounds"}	{"Isabella INTRUDED the Game"}
-132	19	50	5	Alphabetix	complete	Vote	{"Topics: Animals, Countries, Food, Leisure Activities, Movie Characters, Song titles, Sportspersons and TV Shows"}	{}
-133	19	53	6	4:20 Game	complete	Choose	{session_19.png}	{}
-134	19	58	7	Flip 7	complete	Vote	{}	{}
-135	19	13	8	Uno	complete	Vote	{}	{}
-136	19	65	9	Moose Master	complete	Vote	{}	{"Isabella ABANDONED the Game"}
-137	19	64	10	Rhythm Kitchen	complete	Choose	{}	{}
-138	19	30	11	Switch Bowling	complete	Vote	{}	{}
-139	19	61	12	Codenames	complete	Vote	{}	{}
-140	19	59	13	Beer Pong	complete	Vote	{}	{}
-141	19	33	14	Switch Golf	complete	Vote	{}	{"Isabella INTRUDED the Game"}
-142	19	51	15	Uno Stacko	complete	Vote	{}	{}
-143	19	52	16	Jenga	complete	Vote	{"Normal Game"}	{}
-144	19	2	17	Golf	complete	Vote	{"5 rounds"}	{}
-145	19	14	18	Uno Flip	complete	Vote	{}	{}
-146	20	58	1	Flip 7	complete	Vote	{}	{"Dan had a BREAK cone","Isabella had a BREAK cone"}
-147	20	47	2	Quoits	complete	Vote	{"3 rounds"}	{"Max had a VICTORY cone"}
-148	20	65	3	Moose Master	complete	Vote	{}	{"Dan had a WHEEL cone"}
-149	20	34	4	Minigolf Adventure	complete	Vote	{}	{}
-150	20	51	5	Uno Stacko	complete	Choose	{}	{}
-151	20	53	6	4:20 Game	complete	Choose	{}	{session_20.png}
-152	21	58	1	Flip 7	complete	Choose	{}	{"Isabella INTRUDED the Game","Max INTRUDED the Game","Dan had a VICTORY cone"}
-153	21	6	2	Muffin Time	complete	Vote	{}	{}
-154	21	52	3	Jenga	complete	Vote	{"Normal Game"}	{}
-155	21	4	4	Monopoly Deal	complete	Vote	{}	{}
-156	21	22	5	Catan	complete	Vote	{}	{"DINNER BREAK","Dan had a BREAK cone","Jake INTRUDED the Game","Refreshed games"}
-157	21	47	6	Quoits	complete	Vote	{"3 rounds"}	{}
-158	21	52	7	Jenga	complete	Vote	{"Normal Game"}	{}
-159	21	61	8	Codenames	complete	Vote	{}	{}
-160	21	58	9	Flip 7	complete	Vote	{}	{"Alex had a WHEEL cone","Max had a WHEEL cone"}
-161	21	55	10	Five Crowns	complete	Vote	{"Type: Spinner Wheel"}	{}
-162	21	53	11	4:20 Game	complete	Choose	{session_21.png}	{}
-163	21	6	12	Muffin Time	complete	Choose	{}	{"Dan had a VICTORY cone"}
-\.
-
-
---
 -- Data for Name: gog_games_neighed; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -2570,7 +2196,7 @@ COPY public.gog_possible_games (session_id, game_id, game_name) FROM stdin;
 10	20	Monopoly
 10	21	Game of Life
 10	22	Catan
-10	\N	Betrayal at House on the Hill
+10	\N	Betrayal
 10	24	Chess
 10	25	Trouble (Pop-n-hop)
 10	26	Block Party
@@ -2620,7 +2246,7 @@ COPY public.gog_possible_games (session_id, game_id, game_name) FROM stdin;
 11	20	Monopoly
 11	21	Game of Life
 11	22	Catan
-11	\N	Betrayal at House on the Hill
+11	\N	Betrayal
 11	24	Chess
 11	25	Trouble (Pop-n-hop)
 11	26	Block Party
@@ -2723,7 +2349,7 @@ COPY public.gog_possible_games (session_id, game_id, game_name) FROM stdin;
 13	20	Monopoly
 13	21	Game of Life
 13	22	Catan
-13	\N	Betrayal at House on the Hill
+13	\N	Betrayal
 13	24	Chess
 13	25	Trouble (Pop-n-hop)
 13	26	Block Party
@@ -2773,7 +2399,7 @@ COPY public.gog_possible_games (session_id, game_id, game_name) FROM stdin;
 14	20	Monopoly
 14	21	Game of Life
 14	22	Catan
-14	\N	Betrayal at House on the Hill
+14	\N	Betrayal
 14	24	Chess
 14	25	Trouble (Pop-n-hop)
 14	26	Block Party
@@ -3022,35 +2648,6 @@ COPY public.gog_possible_games (session_id, game_id, game_name) FROM stdin;
 
 
 --
--- Data for Name: gog_sessions; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.gog_sessions (session_id, name, status, start_time, finish_time, points_system, speciality_count, refresh_count, intruded, abandoned, extra) FROM stdin;
-1	Game of Games No. 1	complete	2023-01-28 01:00:00+11	2023-01-28 23:59:59+11	Just Points	2	0	{}	{}	{}
-2	Game of Games No. 2	complete	2023-02-24 17:20:00+11	2023-02-24 18:55:52+11	Just Points	1	0	{}	{}	{"All at the same time","Speciality decided by Spinner Wheel"}
-3	Game of Games No. 3	complete	2023-10-12 17:20:00+11	2023-10-12 23:59:59+11	Points & Cones	0	0	{4}	{}	{}
-4	Game of Games No. 4	complete	2023-10-15 01:00:00+11	2023-10-15 23:59:59+11	Points & Cones	0	0	{}	{}	{}
-5	Game of Games No. 5	complete	2024-01-15 01:00:00+11	2024-01-15 23:59:59+11	Points & Cones	0	0	{}	{}	{}
-6	Game of Games No. 6	complete	2024-05-25 00:00:00+10	2024-05-25 23:59:59+10	Points & Cones	2	0	{}	{}	{}
-7	Game of Games No. 7	complete	2024-09-06 16:20:00+10	2024-09-06 23:59:59+10	Points & Cones	2	0	{2}	{6,7}	{}
-8	Game of Games No. 8	complete	2024-09-08 16:20:00+10	2024-09-08 23:59:59+10	Points & Cones	0	0	{}	{7}	{}
-9	Game of Games No. 9	complete	2023-01-28 01:00:00+11	2023-01-28 23:59:59+11	Points & Cones	2	0	{}	{}	{}
-10	Game of Games No. 10	complete	2024-10-07 14:00:00+11	2024-10-07 18:00:00+11	Points & Cones	2	0	{}	{}	{}
-11	Game of Games No. 11	complete	2024-10-23 13:23:00+11	2024-10-23 23:59:59+11	Points & Cones	0	0	{}	{}	{}
-12	Game of Games No. 12	complete	2024-11-24 00:00:00+11	2024-11-24 23:59:59+11	Points & Cones	0	0	{}	{}	{}
-13	Game of Games No. 13	complete	2024-12-21 00:00:00+11	2024-12-21 23:59:00+11	Points & Cones	2	0	{2}	{7}	{}
-14	Game of Games No. 14	complete	2025-01-04 00:00:00+11	2025-01-04 23:59:59+11	Points & Cones	2	0	{}	{}	{}
-15	Game of Games No. 15	complete	2025-01-26 18:00:00+11	2025-01-26 23:59:59+11	Points & Cones	2	0	{2}	{6,7}	{}
-16	Game of Games No. 16	complete	2025-03-09 16:20:00+11	2025-03-09 23:00:00+11	Points & Cones	2	0	{2}	{}	{}
-17	Game of Games No. 17	complete	2025-07-05 14:22:00+10	2025-07-05 23:11:00+10	Points & Cones	2	0	{9,10}	{6,7}	{}
-18	Game of Games No. 18	complete	2025-08-08 19:42:12.39+10	2025-08-09 00:34:33.653+10	Points & Cones	2	0	{}	{7}	{}
-19	Game of Games No. 19	complete	2025-08-30 13:05:49.407+10	2025-08-31 00:02:38.061+10	Points & Cones	2	0	{7}	{7}	{}
-20	Game of Games No. 20	complete	2025-09-19 19:30:00+10	2025-09-19 23:59:59+10	Points & Cones	1	0	{}	{}	{}
-21	Game of Games No. 21	complete	2025-09-27 14:10:00+10	2025-09-27 23:37:37.726+10	Points & Cones	2	1	{7,6,3}	{}	{}
-\.
-
-
---
 -- Data for Name: points_system; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -3085,22 +2682,10 @@ COPY public.user_sessions (sid, sess, expire) FROM stdin;
 
 
 --
--- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Name: accounts_player_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-COPY public.accounts (player_id, name, family, colour, username, password_hash, role, avatar_seed, created_at, last_login, birthday, version) FROM stdin;
-1	Dan	Pudig	#E63946	DanTheMan	$2b$12$2JwoUfWesbbXXGVGO19P7e8yNpo5vKxo4/MjBZjA2DkstduhfUNkq	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=ff0000&translateX=0&translateY=0&eyes=shades&mouth=cute	2025-12-19 16:20:31.487317	2025-12-23 16:20:31.487317	2001-10-23	private
-2	Gideon	Blinder	#105E2F	Gid980	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-05-05	private
-3	Jake	Burgess	#800000	Jqm	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-02-07	private
-4	Danny	Lawrence	#014273	Dannywuh	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-10-26	private
-5	Alex	O'Dowd	#992ADE	Ultraturkey	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-09-11	private
-6	Max	Tester	#00805E	Goodbyeyou	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2001-10-11	private
-7	Isabella	Kaye	#FFFF99	Bella	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-02-24	private
-8	Vanessa	Hodges	#9DC183	Ness	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-01-06	private
-9	Aryana	Afzali	#35063E	Ari	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2002-04-19	private
-10	Max	Valetine	#03C04A	Max	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	user	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2000-09-08	private
-11	Abbey	Walker	#87CEEB	Abbey	$2b$12$JTaQAk8.WV/8d53q.ZwSeeBmxTLHcEEFmQzWOJLDQ/jz5XbGSsCAe	admin	https://api.dicebear.com/9.x/fun-emoji/svg?seed=Emery&radius=50&flip=false&rotate=0&scale=100&backgroundColor=[]&translateX=0&translateY=0&eyes=plain&mouth=plain	2025-12-26 13:23:31.487317	2025-12-26 13:23:31.487317	2001-03-16	private
-\.
+SELECT pg_catalog.setval('public.accounts_player_id_seq', 1, true);
 
 
 --
@@ -3143,221 +2728,6 @@ SELECT pg_catalog.setval('public.gog_sessions_session_id_seq', 20, true);
 --
 
 SELECT pg_catalog.setval('public.points_system_points_system_id_seq', 18, true);
-
-
---
--- Name: accounts_player_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('public.accounts_player_id_seq', 1, true);
-
-
---
--- Name: games_info games_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.games_info
-    ADD CONSTRAINT games_info_pkey PRIMARY KEY (game_id);
-
-
---
--- Name: gog_final_results gog_final_results_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_final_results
-    ADD CONSTRAINT gog_final_results_pkey PRIMARY KEY (session_id, player_id);
-
-
---
--- Name: gog_game_players gog_game_players_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_players
-    ADD CONSTRAINT gog_game_players_pkey PRIMARY KEY (game_instance_id, player_id);
-
-
---
--- Name: gog_game_votes gog_game_votes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_votes
-    ADD CONSTRAINT gog_game_votes_pkey PRIMARY KEY (vote_id);
-
-
---
--- Name: gog_games_neighed gog_games_neighed_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games_neighed
-    ADD CONSTRAINT gog_games_neighed_pkey PRIMARY KEY (game_neighed_id);
-
-
---
--- Name: gog_games gog_games_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games
-    ADD CONSTRAINT gog_games_pkey PRIMARY KEY (game_instance_id);
-
-
---
--- Name: gog_players gog_players_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_players
-    ADD CONSTRAINT gog_players_pkey PRIMARY KEY (session_id, player_id);
-
-
---
--- Name: gog_sessions gog_sessions_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_sessions
-    ADD CONSTRAINT gog_sessions_name_key UNIQUE (name);
-
-
---
--- Name: gog_sessions gog_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_sessions
-    ADD CONSTRAINT gog_sessions_pkey PRIMARY KEY (session_id);
-
-
---
--- Name: points_system points_system_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.points_system
-    ADD CONSTRAINT points_system_pkey PRIMARY KEY (points_system_id);
-
-
---
--- Name: user_sessions user_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.user_sessions
-    ADD CONSTRAINT user_sessions_pkey PRIMARY KEY (sid);
-
-
---
--- Name: accounts accounts_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT accounts_email_key UNIQUE (username);
-
-
---
--- Name: accounts accounts_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT accounts_name_key UNIQUE (name, family);
-
-
---
--- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.accounts
-    ADD CONSTRAINT accounts_pkey PRIMARY KEY (player_id);
-
-
---
--- Name: gog_final_results fk_gog_final_results_session; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_final_results
-    ADD CONSTRAINT fk_gog_final_results_session FOREIGN KEY (session_id) REFERENCES public.gog_sessions(session_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_game_players fk_gog_game_players_game; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_players
-    ADD CONSTRAINT fk_gog_game_players_game FOREIGN KEY (game_instance_id) REFERENCES public.gog_games(game_instance_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_game_votes fk_gog_game_votes_game; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_votes
-    ADD CONSTRAINT fk_gog_game_votes_game FOREIGN KEY (game_instance_id) REFERENCES public.gog_games(game_instance_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_games_neighed fk_gog_games_neighed_session; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games_neighed
-    ADD CONSTRAINT fk_gog_games_neighed_session FOREIGN KEY (session_id) REFERENCES public.gog_sessions(session_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_games fk_gog_games_session; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games
-    ADD CONSTRAINT fk_gog_games_session FOREIGN KEY (session_id) REFERENCES public.gog_sessions(session_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_players fk_gog_players_session; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_players
-    ADD CONSTRAINT fk_gog_players_session FOREIGN KEY (session_id) REFERENCES public.gog_sessions(session_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_possible_games fk_gog_possible_games_session; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_possible_games
-    ADD CONSTRAINT fk_gog_possible_games_session FOREIGN KEY (session_id) REFERENCES public.gog_sessions(session_id) ON DELETE CASCADE;
-
-
---
--- Name: gog_final_results gog_final_results_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_final_results
-    ADD CONSTRAINT gog_final_results_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.accounts(player_id);
-
-
---
--- Name: gog_game_players gog_game_players_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_game_players
-    ADD CONSTRAINT gog_game_players_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.accounts(player_id);
-
-
---
--- Name: gog_games_neighed gog_games_neighed_game_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games_neighed
-    ADD CONSTRAINT gog_games_neighed_game_id_fkey FOREIGN KEY (game_id) REFERENCES public.games_info(game_id);
-
-
---
--- Name: gog_games_neighed gog_games_neighed_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_games_neighed
-    ADD CONSTRAINT gog_games_neighed_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.accounts(player_id);
-
-
---
--- Name: gog_players gog_players_player_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.gog_players
-    ADD CONSTRAINT gog_players_player_id_fkey FOREIGN KEY (player_id) REFERENCES public.accounts(player_id);
 
 
 --
