@@ -83,6 +83,11 @@ app.get('/debug/session', (req, res) => {
     }
 });
 
+app.get('/debug/cookie', (req, res) => {
+  req.session.test = 'ok';
+  res.json({ ok: true });
+});
+
 app.get('/debug/raw-cookie', (req, res) => {
   res.cookie('debug', '1', {
     httpOnly: true,
