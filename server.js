@@ -30,6 +30,7 @@ const photosPath = path.join(process.cwd(), 'photos');
 
 const app = express();
 
+app.set('trust proxy', 1);
 app.use(cors({
     origin: 'https://thegameofgames.win',
     credentials: true

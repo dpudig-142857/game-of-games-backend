@@ -36,7 +36,6 @@ router.post('/login', async (req, res) => {
 
   try {
     const result = await login(req, username, password);
-    console.log(result);
     res.status(200).json({
       authenticated: result.authenticated,
       user: result.user ?? null,
