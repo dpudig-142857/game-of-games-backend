@@ -47,7 +47,7 @@ app.use(session({
     }
 }));
 app.use(cors({
-    origin: 'http://thegameofgames.win',
+    origin: 'https://thegameofgames.win',
     credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -61,14 +61,24 @@ app.use('/api/points', pointsRoutes);
 app.use('/api/tournament', tournamentRoutes);
 app.use('/api/auth', authRoutes);
 
-app.get('/health/db', async (req, res) => {
-  try {
-    const r = await pool.query('SELECT NOW()');
-    res.json({ ok: true, time: r.rows[0].now });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ ok: false, error: err.message });
-  }
+app.get('/debug/db', async (req, res) => {
+    try {
+        const r = await pool.query('SELECT NOW()');
+        res.json({ ok: true, time: r.rows[0].now });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ ok: false, error: err.message });
+    }
+});
+
+app.get('/debug/session', (req, res) => {
+    try {
+        req.session.views = (req.session.views || 0) + 1;
+        res.json({ ok: true, session: req.session });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ ok: false, error: err.message });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
