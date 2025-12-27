@@ -43,12 +43,12 @@ export async function getGameById(id) {
 
 // --- Players ---
 export async function getAllPlayers() {
-    const res = await pool.query('SELECT * FROM players ORDER BY name;');
+    const res = await pool.query('SELECT * FROM accounts ORDER BY name;');
     return res.rows;
 }
 
 export async function getPlayerById(id) {
-    const res = await pool.query('SELECT * FROM players WHERE player_id = $1;', [id]);
+    const res = await pool.query('SELECT * FROM accounts WHERE player_id = $1;', [id]);
     return res.rows[0];
 }
 
@@ -851,7 +851,7 @@ export async function victoryCone(sessionId, data) {
 // --- Stats ---
 export async function getPlayerStats() {
     let playerStats = [];
-    const playersRes = await pool.query('SELECT * FROM players ORDER BY name, family');
+    const playersRes = await pool.query('SELECT * FROM accounts ORDER BY name, family');
     const players = playersRes.rows;
     const displayNames = getDisplayNames(players);
     for (const p of players) {
@@ -1373,7 +1373,7 @@ export async function getGameStats() {
                 COALESCE(vs.vote_chosen, 0) AS vote_chosen,
                 COALESCE(vs.vote_won, 0) AS vote_won,
                 COALESCE(vs.vote_lost, 0) AS vote_lost
-            FROM players p
+            FROM accounts p
             LEFT JOIN game_stats gs ON p.player_id = gs.player_id
             LEFT JOIN neigh_stats ns ON p.player_id = ns.player_id
             LEFT JOIN speciality_count sc ON p.player_id = sc.player_id
@@ -1460,7 +1460,7 @@ export async function getTotalStats() {
             p.name AS name,
             p.family AS family,
             COUNT(*) FILTER (WHERE gfr.place = 1) AS wins
-        FROM players p
+        FROM accounts p
         LEFT JOIN gog_final_results gfr USING (player_id)
         GROUP BY p.player_id, p.name, p.family
         ORDER BY wins DESC, p.name;

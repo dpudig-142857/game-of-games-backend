@@ -168,7 +168,7 @@ for i, session in enumerate(data, start=1):
                     game_name = parts[1].strip()
 
                     # Get player_id and game_id
-                    cur.execute("SELECT player_id FROM players WHERE name = %s", (player_name,))
+                    cur.execute("SELECT player_id FROM accounts WHERE name = %s", (player_name,))
                     player_row = cur.fetchone()
                     cur.execute("SELECT game_id FROM games_info WHERE name = %s", (game_name,))
                     game_row = cur.fetchone()
