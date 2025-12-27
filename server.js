@@ -62,8 +62,13 @@ app.use('/api/tournament', tournamentRoutes);
 app.use('/api/auth', authRoutes);
 
 app.get('/health/db', async (req, res) => {
-  const r = await pool.query('SELECT NOW()');
-  res.json({ ok: true, time: r.rows[0].now });
+  try {
+    const r = await pool.query('SELECT NOW()');
+    res.json({ ok: true, time: r.rows[0].now });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
