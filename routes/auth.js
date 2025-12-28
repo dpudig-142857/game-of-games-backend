@@ -48,6 +48,10 @@ router.post('/register', async (req, res) => {
 });*/
 router.post('/login', async (req, res, next) => {
   try {
+    if (!req.session) {
+      return res.status(500).json({ error: 'Session middleware not active' });
+    }
+    
     const { username, password } = req.body;
 
     const result = await pool.query(

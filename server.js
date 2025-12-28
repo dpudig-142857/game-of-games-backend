@@ -30,11 +30,12 @@ const photosPath = path.join(process.cwd(), 'photos');
 
 const app = express();
 
-app.set('trust proxy', 1);
+app.use(express.json({ limit: '10mb' }));
 app.use(cors({
     origin: 'https://thegameofgames.win',
     credentials: true
 }));
+app.set('trust proxy', 1);
 app.use(session({
     proxy: true,
     store: new PgSession({
@@ -52,7 +53,6 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     }
 }));
-app.use(express.json({ limit: '10mb' }));
 
 app.use('/photos', express.static(photosPath));
 app.use('/api/sessions', sessionsRoutes);
