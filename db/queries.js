@@ -2059,7 +2059,7 @@ export async function verifySession(sessionId) {
 
   const result = await pool.query(
     `
-    SELECT a.player_id, a.username, a.role
+    SELECT a.player_id, a.username, a.role, a.avatar_seed
     FROM sessions s
     JOIN accounts a USING (player_id)
     WHERE s.session_id = $1

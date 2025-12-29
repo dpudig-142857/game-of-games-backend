@@ -7,6 +7,8 @@ import pg from 'pg';
 import session from 'express-session';
 import pgSession from 'connect-pg-simple';
 
+import cookieParser from "cookie-parser";
+
 import sessionsRoutes from './routes/sessions.js';
 import statsRoutes from './routes/stats.js';
 import playersRoutes from './routes/players.js';
@@ -31,6 +33,7 @@ const photosPath = path.join(process.cwd(), 'photos');
 const app = express();
 
 app.use(express.json({ limit: '10mb' }));
+app.use(cookieParser());
 app.use(cors({
     origin: 'https://thegameofgames.win',
     credentials: true
