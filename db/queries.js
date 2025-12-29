@@ -2025,52 +2025,48 @@ export async function logout(req, res) {
 }
 
 export function requireAuth(req, res, next) {
-  const token = req.cookies.session;
-  if (!token) {
-    return res.status(401).json({ error: 'Not authenticated' });
-  }
+    const token = req.cookies.session;
+    if (!token) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
 
-  const user = verifySession(token);
-  if (!user) {
-    return res.status(401).json({ error: 'Invalid session' });
-  }
+    const user = verifySession(token);
+    if (!user) {
+        return res.status(401).json({ error: 'Invalid session' });
+    }
 
-  req.user = user;
-  next();
+    req.user = user;
+    next();
 }*/
 
 export async function createCookieSession(playerId) {
-  const sessionId = crypto.randomUUID();
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const sessionId = crypto.randomUUID();
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-  await pool.query(
-    `
-    INSERT INTO sessions (session_id, player_id, expires_at)
-    VALUES ($1, $2, $3)
-    `,
-    [sessionId, playerId, expiresAt]
-  );
+    await pool.query(`
+        INSERT INTO sessions (session_id, player_id, expires_at)
+        VALUES ($1, $2, $3)
+    `, [
+        sessionId, playerId, expiresAt
+    ]);
 
-  return { sessionId, expiresAt };
+    return { sessionId, expiresAt };
 }
 
 export async function verifySession(sessionId) {
-  if (!sessionId) return null;
+    if (!sessionId) return null;
 
-  const result = await pool.query(
-    `
-    SELECT a.player_id, a.username, a.role, a.avatar_seed
-    FROM sessions s
-    JOIN accounts a USING (player_id)
-    WHERE s.session_id = $1
-      AND s.expires_at > NOW()
-    `,
-    [sessionId]
-  );
+    const result = await pool.query(`
+        SELECT a.player_id, a.username, a.role, a.avatar_seed
+        FROM sessions s
+        JOIN accounts a USING (player_id)
+        WHERE s.session_id = $1
+        AND s.expires_at > NOW()
+    `, [sessionId]);
 
-  if (result.rowCount === 0) return null;
+    if (result.rowCount === 0) return null;
 
-  return result.rows[0];
+    return result.rows[0];
 }
 
 export async function login(username, password, res) {
