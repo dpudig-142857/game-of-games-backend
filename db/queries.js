@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import pool from '../server.js';
 
+import crypto from 'crypto';
+import e from 'express';
+
 dotenv.config();
 
 function getDisplayNames(players) {
@@ -1933,7 +1936,7 @@ export async function getStats() {
 }
 
 // --- Auth ---
-export async function authenticate(req) {
+/*export async function authenticate(req) {
     if (!req.session || !req.session.userId) {
         return { authenticated: false };
     }
@@ -1965,7 +1968,7 @@ export async function authenticate(req) {
     };
 }
 
-export async function login(req, username, password) {
+export async function login(req, res, username, password) {
     if (!username) {
         return {
             authenticated: false,
@@ -1974,9 +1977,7 @@ export async function login(req, username, password) {
     }
     
     const result = await pool.query(`
-        SELECT *
-        FROM accounts
-        WHERE username = $1
+        SELECT * FROM accounts WHERE username = $1
     `, [username]);
 
     if (result.rows.length === 0) {
@@ -2003,8 +2004,13 @@ export async function login(req, username, password) {
 
     req.session.userId = user.id;
 
-    await new Promise((resolve, reject) => {
-        req.session.save(err => err ? reject(err) : resolve());
+    res.cookie('session', user.sessionToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        domain: '.thegameofgames.win',
+        path: '/',
+        maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
     return {
@@ -2015,18 +2021,137 @@ export async function login(req, username, password) {
 }
 
 export async function logout(req, res) {
-    if (!req.session) {
-        return res.json({ success: true });
+    
+}
+
+export function requireAuth(req, res, next) {
+  const token = req.cookies.session;
+  if (!token) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const user = verifySession(token);
+  if (!user) {
+    return res.status(401).json({ error: 'Invalid session' });
+  }
+
+  req.user = user;
+  next();
+}*/
+
+export async function createCookieSession(playerId) {
+  const sessionId = crypto.randomUUID();
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  await pool.query(
+    `
+    INSERT INTO sessions (session_id, player_id, expires_at)
+    VALUES ($1, $2, $3)
+    `,
+    [sessionId, playerId, expiresAt]
+  );
+
+  return { sessionId, expiresAt };
+}
+
+export async function verifySession(sessionId) {
+  if (!sessionId) return null;
+
+  const result = await pool.query(
+    `
+    SELECT a.player_id, a.username, a.role
+    FROM sessions s
+    JOIN accounts a USING (player_id)
+    WHERE s.session_id = $1
+      AND s.expires_at > NOW()
+    `,
+    [sessionId]
+  );
+
+  if (result.rowCount === 0) return null;
+
+  return result.rows[0];
+}
+
+export async function login(username, password, res) {
+    if (!username) {
+        return {
+            authenticated: false,
+            text: 'No Username given'
+        };
+    }
+    
+    const result = await pool.query(`
+        SELECT * FROM accounts WHERE username = $1
+    `, [username]);
+
+    if (result.rowCount === 0) {
+        return {
+            authenticated: false,
+            text: 'Username not found'
+        };
     }
 
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Session destroy error:', err);
-            return res.status(500).json({ error: 'Logout failed' });
-        }
+    const user = result.rows[0];
 
-        res.clearCookie('gameofgames.sid', { path: '/' });
+    if (!password) {
+        return {
+            authenticated: false,
+            text: 'No Password given'
+        };
+    }
 
-        res.json({ success: true });
+    const ok = await bcrypt.compare(password, user.password_hash);
+    if (!ok) {
+        return {
+            authenticated: false,
+            text: 'Incorrect password'
+        };
+    }
+
+    const { sessionId, expiresAt } = await createCookieSession(user.player_id);
+
+    res.cookie('gog_session', sessionId, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        domain: '.thegameofgames.win',
+        path: '/',
+        expires: expiresAt
     });
+
+    return {
+        authenticated: true,
+        user,
+        text: 'success'
+    }
+}
+
+export function requireAuth() {
+  return async (req, res, next) => {
+    const sessionId = req.cookies.gog_session;
+    const user = await verifySession(sessionId);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    req.user = user;
+    next();
+  };
+}
+
+export async function logout(sessionId) {
+    if (sessionId) {
+        await pool.query(`
+            DELETE FROM sessions WHERE session_id = $1
+        `, [sessionId]);
+    }
+
+    res.clearCookie('gog_session', {
+        domain: '.thegameofgames.win',
+        path: '/'
+    });
+
+    return { ok: true };
 }
