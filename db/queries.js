@@ -2137,7 +2137,8 @@ export function requireAuth() {
             authenticated: false,
             player_id: null,
             username: null,
-            role: null
+            role: null,
+            avatar_seed: null
         });
     }
 

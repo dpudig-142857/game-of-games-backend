@@ -17,7 +17,8 @@ router.get('/me', requireAuth(), (req, res) => {
     authenticated: true,
     player_id: req.user.player_id,
     username: req.user.username,
-    role: req.user.role
+    role: req.user.role,
+    avatar_seed: req.user.avatar_seed
   });
 });
 
